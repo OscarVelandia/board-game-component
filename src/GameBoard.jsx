@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-// import PropTypes from "prop-types";
 
 import "./GameBoard.css";
-
+/* TODO
+ * Hacer focus() en un elemento específico según su tabindex.
+ * Moverse dentro de la grilla con las arrow keys
+ */
 const GameBoard = () => {
   const width = 4;
   const height = 4;
@@ -15,11 +17,8 @@ const GameBoard = () => {
   // const [gameWinner, setGameWinner] = useState(undefined);
 
   function handlePieceClick(selectedPiece, selectedSlot) {
-    // console.log(selectedSlot, selectedPiece);
     usedPiece.set(selectedSlot, selectedPiece);
     setPiece(selectedPiece === "🙂" ? "🙃" : "🙂");
-    console.log(usedPiece.size);
-
     /* Cuando llega a 4 piezas usadas muestra el botón para borrar el estado del juego, 
     pero la condición podria ser cualquiera. */
     if (usedPiece.size === 4) {
@@ -33,13 +32,7 @@ const GameBoard = () => {
   }
 
   function handleKeyPress(e) {
-    /* TODO: hacer que ejecute la función con la tecla que quiera, 
-    con espacio estaba ejecutando porque el espacio es interpretado como click */
-    if (e.key === "o") {
-      handlePieceClick();
-      console.log(usedPiece.size);
-    }
-
+    // console.log(e);
     if (e.key === "n") {
       handleNewGame();
     }
@@ -47,7 +40,7 @@ const GameBoard = () => {
 
   return (
     <React.StrictMode>
-      <main>
+      <main tabIndex="-1">
         {slotsInBoard.map(slot => {
           const selectedSlot = usedPiece.get(slot);
           // console.log(selectedSlot, slot, usedPiece.size);
@@ -56,7 +49,7 @@ const GameBoard = () => {
               key={slot}
               type="button"
               className="slots"
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               tabIndex={slot + 1}
               /* Niego el selectedSlot para que se pierda la referencia del estado anterior y 
                   asi no se pueda cambiar la pieza una vez puesto */
