@@ -4,10 +4,11 @@ import React, { useState } from "react";
 import "./GameBoard.css";
 
 const GameBoard = () => {
-  const width = 6;
-  const height = 6;
+  const width = 8;
+  const height = 8;
   const slotsInBoard = [...Array(width * height).keys()];
-  // const gameIsFinished = false;
+
+  const [gameIsFinished, setGameIsFinished] = useState(false);
   const [piece, setPiece] = useState("🙂");
   const [usedPiece] = useState(() => new Map());
   // En este hook se deberia hacer la lógica del juego
@@ -16,16 +17,20 @@ const GameBoard = () => {
   function handlePieceClick(selectedPiece, selectedSlot) {
     usedPiece.set(selectedSlot, selectedPiece);
     setPiece(selectedPiece === "🙂" ? "🙃" : "🙂");
+
+    /* Cuando llega a 4 piezas usadas, muestra el botón para reiniciar el juego, 
+    pero podria mostrarse cuando hay un ganador */
+    if (usedPiece.size === 4) {
+      setGameIsFinished(true);
+    }
   }
 
   function handleNewGame() {
-    // console.log(usedPiece);
     usedPiece.clear();
-    // console.log(usedPiece);
-
-    // setGameWinner(undefined);
+    setGameIsFinished(false);
   }
 
+  // TODO permitir que se pueda jugar con el teclado.
   function handleKeyPress(e) {
     if (e.key === " ") {
       // console.log("espacio");
@@ -49,6 +54,8 @@ const GameBoard = () => {
               onKeyPress={handleKeyPress}
               role="button"
               tabIndex="0"
+              /* Niego el selectedSlot para que se pierda la referencia del estado anterior y 
+                  asi no se pueda cambiar la pieza una vez puesto */
               onClick={() => !selectedSlot && handlePieceClick(piece, slot)}
             >
               {selectedSlot}
@@ -56,8 +63,14 @@ const GameBoard = () => {
           );
         })}
       </main>
-      {true && (
-        <button id="reset" type="button" onClick={handleNewGame}>
+      {gameIsFinished && (
+        <button
+          id="reset"
+          type="button"
+          onClick={handleNewGame}
+          tabIndex="0"
+          onKeyPress={handleKeyPress}
+        >
           Volver a iniciar
         </button>
       )}
