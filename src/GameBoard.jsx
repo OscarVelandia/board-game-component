@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import "./GameBoard.css";
 
 const GameBoard = () => {
-  const width = 8;
-  const height = 8;
+  const width = 4;
+  const height = 4;
   const slotsInBoard = [...Array(width * height).keys()];
 
   const [gameIsFinished, setGameIsFinished] = useState(false);
@@ -15,11 +15,13 @@ const GameBoard = () => {
   // const [gameWinner, setGameWinner] = useState(undefined);
 
   function handlePieceClick(selectedPiece, selectedSlot) {
+    // console.log(selectedSlot, selectedPiece);
     usedPiece.set(selectedSlot, selectedPiece);
     setPiece(selectedPiece === "🙂" ? "🙃" : "🙂");
+    console.log(usedPiece.size);
 
-    /* Cuando llega a 4 piezas usadas, muestra el botón para reiniciar el juego, 
-    pero podria mostrarse cuando hay un ganador */
+    /* Cuando llega a 4 piezas usadas muestra el botón para borrar el estado del juego, 
+    pero la condición podria ser cualquiera. */
     if (usedPiece.size === 4) {
       setGameIsFinished(true);
     }
@@ -30,15 +32,15 @@ const GameBoard = () => {
     setGameIsFinished(false);
   }
 
-  // TODO permitir que se pueda jugar con el teclado.
   function handleKeyPress(e) {
-    if (e.key === " ") {
-      // console.log("espacio");
+    /* TODO: hacer que ejecute la función con la tecla que quiera, 
+    con espacio estaba ejecutando porque el espacio es interpretado como click */
+    if (e.key === "o") {
       handlePieceClick();
+      console.log(usedPiece.size);
     }
 
     if (e.key === "n") {
-      // console.log("n");
       handleNewGame();
     }
   }
@@ -48,29 +50,25 @@ const GameBoard = () => {
       <main>
         {slotsInBoard.map(slot => {
           const selectedSlot = usedPiece.get(slot);
+          // console.log(selectedSlot, slot, usedPiece.size);
           return (
-            <div
+            <button
               key={slot}
+              type="button"
+              className="slots"
               onKeyPress={handleKeyPress}
-              role="button"
-              tabIndex="0"
+              tabIndex={slot + 1}
               /* Niego el selectedSlot para que se pierda la referencia del estado anterior y 
                   asi no se pueda cambiar la pieza una vez puesto */
               onClick={() => !selectedSlot && handlePieceClick(piece, slot)}
             >
               {selectedSlot}
-            </div>
+            </button>
           );
         })}
       </main>
       {gameIsFinished && (
-        <button
-          id="reset"
-          type="button"
-          onClick={handleNewGame}
-          tabIndex="0"
-          onKeyPress={handleKeyPress}
-        >
+        <button id="reset" type="button" onClick={handleNewGame}>
           Volver a iniciar
         </button>
       )}
