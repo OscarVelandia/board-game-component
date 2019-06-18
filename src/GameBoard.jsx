@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, createRef } from "react";
 
 import "./GameBoard.css";
-/* TODO
- * Hacer focus() en un elemento específico según su tabindex.
- * Moverse dentro de la grilla con las arrow keys
- */
+
 const GameBoard = () => {
   const width = 4;
   const height = 4;
   const slotsInBoard = [...Array(width * height).keys()];
 
+  const refs = useRef(slotsInBoard.map(() => createRef()));
+  const [slotFocus, setSlotFocus] = useState(0);
   const [gameIsFinished, setGameIsFinished] = useState(false);
   const [piece, setPiece] = useState("🙂");
   const [usedPiece] = useState(() => new Map());
@@ -31,17 +30,41 @@ const GameBoard = () => {
     setGameIsFinished(false);
   }
 
+  // TODO: Hay que usar esta función para hacer el movimiento.
+  function setMove(moveNumber) {
+    setSlotFocus(slotFocus + moveNumber);
+  }
+
   function handleKeyPress(e) {
-    // console.log(e);
+    if (e.key === "ArrowUp" && slotFocus < width) {
+      setMove(1);
+    }
+
+    if (e.key === "ArrowRight" && slotFocus + 1 < width) {
+      setMove(1);
+    }
+
+    if (e.key === "ArrowDown" && slotFocus < width) {
+      // setMove(1);
+    }
+
+    if (e.key === "ArrowLeft" && slotFocus + 1 < width) {
+      setMove(-1);
+    }
+
     if (e.key === "n") {
       handleNewGame();
     }
   }
 
+  useEffect(() => {
+    refs.current[slotFocus].current.focus();
+  }, [slotFocus]);
+
   return (
     <React.StrictMode>
-      <main tabIndex="-1">
-        {slotsInBoard.map(slot => {
+      <main>
+        {slotsInBoard.map((slot, index) => {
           const selectedSlot = usedPiece.get(slot);
           // console.log(selectedSlot, slot, usedPiece.size);
           return (
@@ -49,6 +72,7 @@ const GameBoard = () => {
               key={slot}
               type="button"
               className="slots"
+              ref={refs.current[index]}
               onKeyDown={handleKeyPress}
               tabIndex={slot + 1}
               /* Niego el selectedSlot para que se pierda la referencia del estado anterior y 
