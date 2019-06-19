@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, createRef } from "react";
 
 import "./GameBoard.css";
+// TODO agregar un border a cada botón seleccionado.
 
 const GameBoard = () => {
   const width = 4;
@@ -30,26 +31,33 @@ const GameBoard = () => {
     setGameIsFinished(false);
   }
 
-  // TODO: Hay que usar esta función para hacer el movimiento.
-  function setMove(moveNumber) {
+  function setMove(pressKey) {
+    let moveNumber = 0;
+
+    if (pressKey === "ArrowUp" && slotFocus >= width) {
+      moveNumber -= width;
+    }
+
+    if (pressKey === "ArrowRight" && slotFocus < slotsInBoard.length - 1) {
+      moveNumber += 1;
+    }
+
+    if (pressKey === "ArrowDown" && slotFocus < height * width - width) {
+      moveNumber += width;
+    }
+
+    if (pressKey === "ArrowLeft" && slotFocus > 0) {
+      moveNumber -= 1;
+    }
+
     setSlotFocus(slotFocus + moveNumber);
   }
 
   function handleKeyPress(e) {
-    if (e.key === "ArrowUp" && slotFocus < width) {
-      setMove(1);
-    }
+    const arrowKeys = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"];
 
-    if (e.key === "ArrowRight" && slotFocus + 1 < width) {
-      setMove(1);
-    }
-
-    if (e.key === "ArrowDown" && slotFocus < width) {
-      // setMove(1);
-    }
-
-    if (e.key === "ArrowLeft" && slotFocus + 1 < width) {
-      setMove(-1);
+    if (arrowKeys.includes(e.key)) {
+      setMove(e.key);
     }
 
     if (e.key === "n") {
