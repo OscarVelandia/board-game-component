@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, createRef } from "react";
 
 import "./GameBoard.css";
-// TODO agregar un border a cada botón seleccionado.
 
 const GameBoard = () => {
   const width = 4;

@@ -11,6 +11,7 @@ La idea es que este componente se pueda usar en varios tipos de juego de mesa.
 ## Configuración del proyecto
 
 - Se agregó eslint y prettier
+- El componente está dentro del Strict Mode de React para mostrar posibles errores o malas prácticas en la consola, [acá](https://reactjs.org/docs/strict-mode.html) más info.
 - storybook para visualizar y maquetar los componentes (en el componente no se usa pero está configurado para agregarlo)
 - Se usa _pretty-quick_ como un pre-commit hook junto a _husky_, estas dependencias formatean los archivos cuando se hace `git commit` y si hay un error según _eslint_, no deja hacer el commit y muestra el error.
 - Se configuro la extensión _Debugger for Chrome_ para trabajar junto a `Create React App`
@@ -29,3 +30,7 @@ La idea es que este componente se pueda usar en varios tipos de juego de mesa.
   - useState
   - useEffect
   - useRef
+
+## TODO
+
+- Sacar la lógica de los botones a un custom hook para que de esa manera el componente `GameBoard` no haga tantas cosas, en la carpeta components está el sitio donde se puede trabajar.
