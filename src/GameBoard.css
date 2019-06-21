@@ -14,6 +14,29 @@ main > .slots {
   justify-content: center;
 }
 
+@keyframes hover-animation {
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.slots:focus,
+.slots:hover {
+  animation-name: hover-animation;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  border: 3px dashed rgba(180, 96, 12, 0.74);
+}
+
 #reset {
   position: absolute;
   border-radius: 10%;

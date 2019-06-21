@@ -74,7 +74,6 @@ const GameBoard = () => {
       <main>
         {slotsInBoard.map((slot, index) => {
           const selectedSlot = usedPiece.get(slot);
-          // console.log(selectedSlot, slot, usedPiece.size);
           return (
             <button
               key={slot}
