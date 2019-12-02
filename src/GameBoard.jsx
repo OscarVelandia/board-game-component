@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, createRef } from "react";
 
+import GamePiece from "./GamePiece";
 import "./GameBoard.css";
 
 const GameBoard = () => {
@@ -15,11 +16,14 @@ const GameBoard = () => {
   // En este hook se deberia hacer la lógica del juego
   // const [gameWinner, setGameWinner] = useState(undefined);
 
+  useEffect(() => {
+    refs.current[slotFocus].current.focus();
+  }, [slotFocus]);
+
   function handlePieceClick(selectedPiece, selectedSlot) {
     usedPiece.set(selectedSlot, selectedPiece);
     setPiece(selectedPiece === "🙂" ? "🙃" : "🙂");
-    /* Cuando llega a 4 piezas usadas muestra el botón para borrar el estado del juego, 
-    pero la condición podria ser cualquiera. */
+
     if (usedPiece.size === 4) {
       setGameIsFinished(true);
     }
@@ -64,29 +68,23 @@ const GameBoard = () => {
     }
   }
 
-  useEffect(() => {
-    refs.current[slotFocus].current.focus();
-  }, [slotFocus]);
-
   return (
     <React.StrictMode>
       <main>
         {slotsInBoard.map((slot, index) => {
           const selectedSlot = usedPiece.get(slot);
+
           return (
-            <button
+            <GamePiece
               key={slot}
-              type="button"
-              className="slots"
-              ref={refs.current[index]}
               onKeyDown={handleKeyPress}
-              tabIndex={slot + 1}
-              /* Niego el selectedSlot para que se pierda la referencia del estado anterior y 
-                  asi no se pueda cambiar la pieza una vez puesto */
-              onClick={() => !selectedSlot && handlePieceClick(piece, slot)}
-            >
-              {selectedSlot}
-            </button>
+              onClick={() => {
+                handlePieceClick(piece, slot);
+              }}
+              pieceRef={refs.current[index]}
+              piecePosition={slot + 1}
+              selectedPiece={selectedSlot}
+            />
           );
         })}
       </main>
